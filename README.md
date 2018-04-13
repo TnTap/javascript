@@ -1,22 +1,8 @@
-# Airbnb JavaScript Style Guide() {
+# TnTap JavaScript Style Guide() {
 
-*A mostly reasonable approach to JavaScript*
+*A mostly reasonable approach to JavaScript (AirBnB variant)*
 
-> **Note**: this guide assumes you are using [Babel](https://babeljs.io), and requires that you use [babel-preset-airbnb](https://npmjs.com/babel-preset-airbnb) or the equivalent. It also assumes you are installing shims/polyfills in your app, with [airbnb-browser-shims](https://npmjs.com/airbnb-browser-shims) or the equivalent.
-
-[![Downloads](https://img.shields.io/npm/dm/eslint-config-airbnb.svg)](https://www.npmjs.com/package/eslint-config-airbnb)
-[![Downloads](https://img.shields.io/npm/dm/eslint-config-airbnb-base.svg)](https://www.npmjs.com/package/eslint-config-airbnb-base)
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/airbnb/javascript?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-
-This guide is available in other languages too. See [Translation](#translation)
-
-Other Style Guides
-
-  - [ES5 (Deprecated)](https://github.com/airbnb/javascript/tree/es5-deprecated/es5)
-  - [React](react/)
-  - [CSS-in-JavaScript](css-in-javascript/)
-  - [CSS & Sass](https://github.com/airbnb/css)
-  - [Ruby](https://github.com/airbnb/ruby)
+> **Note**: this guide assumes you are using [Babel](https://babeljs.io).
 
 ## Table of Contents
 
@@ -172,7 +158,7 @@ Other Style Guides
 
     ```javascript
 
-    function getKey(k) {
+    getKey = (k) => {
       return `a key named ${k}`;
     }
 
@@ -199,7 +185,7 @@ Other Style Guides
     const atom = {
       value: 1,
 
-      addValue: function (value) {
+      addValue: value => {
         return atom.value + value;
       },
     };
@@ -208,7 +194,7 @@ Other Style Guides
     const atom = {
       value: 1,
 
-      addValue(value) {
+      addValue = value => {
         return atom.value + value;
       },
     };
@@ -488,7 +474,7 @@ Other Style Guides
 
     ```javascript
     // bad
-    function getFullName(user) {
+    const getFullName = (user) => {
       const firstName = user.firstName;
       const lastName = user.lastName;
 
@@ -496,13 +482,13 @@ Other Style Guides
     }
 
     // good
-    function getFullName(user) {
+    const getFullName = (user) => {
       const { firstName, lastName } = user;
       return `${firstName} ${lastName}`;
     }
 
     // best
-    function getFullName({ firstName, lastName }) {
+    const getFullName = ({ firstName, lastName }) => {
       return `${firstName} ${lastName}`;
     }
     ```
@@ -528,7 +514,7 @@ Other Style Guides
 
     ```javascript
     // bad
-    function processInput(input) {
+    const processInput = (input) => {
       // then a miracle occurs
       return [left, right, top, bottom];
     }
@@ -537,7 +523,7 @@ Other Style Guides
     const [left, __, top] = processInput(input);
 
     // good
-    function processInput(input) {
+    const processInput = (input) => {
       // then a miracle occurs
       return { left, right, top, bottom };
     }
@@ -592,7 +578,7 @@ Other Style Guides
 
     ```javascript
     // bad
-    function sayHi(name) {
+    const sayHi = (name) => {
       return 'How are you, ' + name + '?';
     }
 
@@ -634,27 +620,40 @@ Other Style Guides
 ## Functions
 
   <a name="functions--declarations"></a><a name="7.1"></a>
-  - [7.1](#functions--declarations) Use named function expressions instead of function declarations. eslint: [`func-style`](https://eslint.org/docs/rules/func-style)
+  - [7.1a](#functions--declarations) Use named function expressions instead of function declarations. eslint: [`func-style`](https://eslint.org/docs/rules/func-style)
 
     > Why? Function declarations are hoisted, which means that it’s easy - too easy - to reference the function before it is defined in the file. This harms readability and maintainability. If you find that a function’s definition is large or complex enough that it is interfering with understanding the rest of the file, then perhaps it’s time to extract it to its own module! Don’t forget to explicitly name the expression, regardless of whether or not the name is inferred from the containing variable (which is often the case in modern browsers or when using compilers such as Babel). This eliminates any assumptions made about the Error's call stack. ([Discussion](https://github.com/airbnb/javascript/issues/794))
 
     ```javascript
-    // bad
-    function foo() {
-      // ...
-    }
+      // bad
+      function foo() {
+        // ...
+      }
 
-    // bad
-    const foo = function () {
-      // ...
-    };
+      // good
+      function longDescriptiveFunctionName() {
+        // ...
+      }
 
-    // good
-    // lexical name distinguished from the variable-referenced invocation(s)
-    const short = function longUniqueMoreDescriptiveLexicalFoo() {
-      // ...
-    };
-    ```
+      ```
+
+  - [7.1b](#functions--declarations) Use arrow function expressions instead of          function declarations. eslint: [`func-style`](https://eslint.org/docs/rules/func-style)
+
+    > Ignore the non-arrow functions in the remaining part of this code style guide!
+
+    ```javascript
+      // bad
+      function foo() {
+        // ...
+      }
+
+      // good
+      const longDescriptiveFunctionName = () => {
+        // ...
+      };
+
+      ```
+     
 
   <a name="functions--iife"></a><a name="7.2"></a>
   - [7.2](#functions--iife) Wrap immediately invoked function expressions in parentheses. eslint: [`wrap-iife`](https://eslint.org/docs/rules/wrap-iife.html)
@@ -663,7 +662,7 @@ Other Style Guides
 
     ```javascript
     // immediately-invoked function expression (IIFE)
-    (function () {
+    (() => {
       console.log('Welcome to the Internet. Please follow me.');
     }());
     ```
@@ -677,7 +676,7 @@ Other Style Guides
     ```javascript
     // bad
     if (currentUser) {
-      function test() {
+      const test = () => {
         console.log('Nope.');
       }
     }
@@ -696,12 +695,12 @@ Other Style Guides
 
     ```javascript
     // bad
-    function foo(name, options, arguments) {
+    const foo = (name, options, arguments) => {
       // ...
     }
 
     // good
-    function foo(name, options, args) {
+    const foo = (name, options, args) => {
       // ...
     }
     ```
@@ -910,7 +909,57 @@ Other Style Guides
       baz,
     );
     ```
+  <a name="functions--api-client-naming"></a>
+  - [7.16](#functions--api-client-naming) Functions that define an API call must user underscore naming.
 
+    > Why? So that application functions and API call functions can be easily distinguished.
+
+    ```javascript
+    // bad
+    const addUser = (username, password, cb) => {
+      // ...
+    };
+
+    // good
+    const add_user = (username, password, cb) => {
+      // ...
+    };
+    ```
+  
+  <a name="functions--api-client-callback"></a>
+  - [7.17](#functions--api-client-callback) Functions that define an API call must use callbacks to return values. eslint: `tntap-prefer-callback`
+
+    > Why? API calls are made with `fetch` which is non-blocking. The use of `return` will ensure an incorrect value is return to the caller.
+
+    > <b>Warning</b>: Promises should not be used as their return value is too generic.
+
+    ```javascript
+    // bad
+    const add_user = (username, password) => {
+      // ...
+      fetch(/* ... */);
+      return result;
+    };
+
+    // bad
+    // No Promise return!
+    const add_user = (username, password) => {
+      // ...
+      return fetch(/*...*/);
+    };
+
+    // good
+    const add_user = (username, password, cb) => {
+      // ...
+      fetch(/* ... */)
+        .then(result => {
+          cb(null, result);
+        })
+        .catch(err => {
+          cb(err, null);
+        });
+    };
+    ```
 **[⬆ back to top](#table-of-contents)**
 
 ## Arrow Functions
@@ -3439,7 +3488,7 @@ Other Style Guides
     - Whichever testing framework you use, you should be writing tests!
     - Strive to write many small pure functions, and minimize where mutations occur.
     - Be cautious about stubs and mocks - they can make your tests more brittle.
-    - We primarily use [`mocha`](https://www.npmjs.com/package/mocha) and [`jest`](https://www.npmjs.com/package/jest) at Airbnb. [`tape`](https://www.npmjs.com/package/tape) is also used occasionally for small, separate modules.
+    - We primarily use [`mocha`](https://www.npmjs.com/package/mocha) and [`jest`](https://www.npmjs.com/package/jest) at TnTap. [`tape`](https://www.npmjs.com/package/tape) is also used occasionally for small, separate modules.
     - 100% test coverage is a good goal to strive for, even if it’s not always practical to reach it.
     - Whenever you fix a bug, _write a regression test_. A bug fixed without a regression test is almost certainly going to break again in the future.
 
@@ -3693,6 +3742,28 @@ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
 CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+MIT License
+
+Copyright (c) 2018 TnTap
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
 **[⬆ back to top](#table-of-contents)**
 
